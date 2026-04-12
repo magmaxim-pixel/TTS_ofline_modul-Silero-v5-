@@ -1,0 +1,34 @@
+Metadata-Version: 2.4
+Name: silero-offline-tts
+Version: 1.0.0
+Summary: Офлайн-синтез речи на базе Silero TTS (RU V5 + EN V3)
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: torch>=2.0.0
+Requires-Dist: torchaudio>=2.0.0
+Requires-Dist: soundfile>=0.12.1
+Requires-Dist: numpy>=1.24.0
+Requires-Dist: scipy>=1.10.0
+Requires-Dist: loguru>=0.7.2
+Requires-Dist: omegaconf>=2.3.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Requires-Dist: black>=23.0; extra == "dev"
+Requires-Dist: mypy>=1.0; extra == "dev"
+
+# Silero Offline TTS
+
+Офлайн-синтез речи на базе **Silero TTS** с поддержкой:
+- 🇷🇺 Русский (модель V5, 48 кГц)
+- 🇬🇧 Английский (модель V3, 24 кГц)
+
+## Особенности
+- ✅ Полностью офлайн после первой загрузки
+- 🔇 Фоновое воспроизведение без открытия окон
+- ⚡ Оптимизации PyTorch 2.x (+40-70% скорости)
+- 🎚️ Регулировка громкости и скорости в реальном времени
+- 🧵 Потокобезопасный синтез
+
+## Установка
+```bash
+pip install -e .
