@@ -28,7 +28,7 @@ def interactive_loop(tts_instance, speaker: str = "xenia") -> None:
             cmd = user_input.lower()
 
             if cmd in ("exit", "quit", "q", "выход"):
-                logger.info("👋 До свидания!")
+                logger.info("Завершение работы")
                 break
 
             if cmd in ("help", "h", "справка"):
@@ -56,32 +56,31 @@ def interactive_loop(tts_instance, speaker: str = "xenia") -> None:
 
             if cmd in valid_speakers_lower:
                 current_speaker = next(s for s in cfg["speakers"] if s.lower() == cmd)
-                logger.info(f"✓ Голос: {current_speaker}")
+                logger.info(f" Голос: {current_speaker}")
                 continue
 
             # Синтез и воспроизведение
             start = time.time()
-            logger.info("⏳ Синтез...")
+            logger.info(" Синтез...")
             try:
                 audio = tts_instance.synthesize(
                     text=user_input, speaker=current_speaker, put_accent=True, put_yo=False
                 )
                 latency = time.time() - start
-                logger.info(f"🔊 Воспроизведение (синтез: {latency:.3f}с)...")
+                logger.info(f"🔊 Воспроизведение заняло: {latency:.3f}с)...")
                 native_sr = MODELS[tts_instance.current_lang]["native_sr"]
                 audio_adj = adjust_speed(audio, speed=SPEED)
                 play_audio(audio_adj, sample_rate=native_sr, volume=VOLUME)
-                logger.info("✅ Готово.\n")
             except Exception as e:
-                logger.error(f"❌ Ошибка: {type(e).__name__}: {e}")
+                logger.error(f" Ошибка: {type(e).__name__}: {e}")
 
         except KeyboardInterrupt:
             print("\n⚠️  Прервано. Введите 'exit' для выхода.")
         except EOFError:
-            logger.info("\n👋 Конец ввода.")
+            logger.info("\n Конец ввода.")
             break
         except Exception as e:
-            logger.error(f"❌ Критическая ошибка: {e}")
+            logger.error(f" Критическая ошибка: {e}")
 
 
 def _print_help() -> None:
@@ -110,7 +109,7 @@ def _handle_volume(cmd: str) -> None:
         vol = float(cmd.split(" ", 1)[1])
         if VOLUME_RANGE[0] <= vol <= VOLUME_RANGE[1]:
             VOLUME = vol
-            logger.info(f"🔊 Громкость: {vol}")
+            logger.info(f" Громкость: {vol}")
         else:
             logger.warning(f"Диапазон: {VOLUME_RANGE[0]} - {VOLUME_RANGE[1]}")
     except:
@@ -124,7 +123,7 @@ def _handle_speed(cmd: str) -> None:
         spd = float(cmd.split(" ", 1)[1])
         if SPEED_RANGE[0] <= spd <= SPEED_RANGE[1]:
             SPEED = spd
-            logger.info(f"🐇 Скорость: {spd}x")
+            logger.info(f" Скорость: {spd}x")
         else:
             logger.warning(f"Диапазон: {SPEED_RANGE[0]} - {SPEED_RANGE[1]}")
     except:

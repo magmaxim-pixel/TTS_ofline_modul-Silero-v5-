@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 def main():
     print("🚀 Silero TTS — RU + EN (чистый, быстрый, плавный конец)")
     tts = OfflineSileroTTS(languages=["ru", "en"], device="auto", optimize=True)
-    interactive_loop(tts, speaker="xenia")
+    interactive_loop(tts, speaker="aidar")
 
 
 if __name__ == "__main__":

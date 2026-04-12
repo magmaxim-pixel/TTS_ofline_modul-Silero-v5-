@@ -25,7 +25,7 @@ def warmup_model(tts_instance) -> None:
         txt = "warmup" if tts_instance.current_lang != "ru" else "прогрев"
         with torch.inference_mode():
             tts_instance.synthesize(txt, put_accent=False, put_yo=False)
-        logger.info("✅ Model warmed up.")
+        logger.info(" Model warmed up.")
     except:
         pass  # Игнорируем ошибки прогрева
 

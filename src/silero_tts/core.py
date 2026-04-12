@@ -111,7 +111,7 @@ class OfflineSileroTTS:
         if lang_key not in self.models:
             self.models[lang_key] = self._load_model(lang_key, cache_dir=None)
         self.current_lang = lang_key
-        logger.info(f"🌐 Язык переключён на: {lang_key}")
+        logger.info(f" Язык переключён на: {lang_key}")
 
     def save_to_file(
         self, text: str, output_path: str, speaker: Optional[str] = None, **kwargs
