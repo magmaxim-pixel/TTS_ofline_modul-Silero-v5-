@@ -1,6 +1,7 @@
 """Интерактивный CLI-интерфейс."""
 
 import time
+from pathlib import Path
 from loguru import logger
 
 from .config import MODELS, DEFAULT_VOLUME, DEFAULT_SPEED, VOLUME_RANGE, SPEED_RANGE
@@ -14,7 +15,7 @@ def interactive_loop(tts_instance, speaker: str = "xenia") -> None:
     SPEED, VOLUME = DEFAULT_SPEED, DEFAULT_VOLUME
 
     logger.info("🎙️  Интерактивный режим. Введите текст или команду.")
-    logger.info("💡 Команды: exit, speakers, lang <key>, vol <0.1-2.0>, speed <0.5-2.0>")
+    logger.info("💡 Команды: exit, speakers, lang <key>, vol <0.1-2.0>, speed <0.5-2.0>, test")
 
     cfg = MODELS[tts_instance.current_lang]
     current_speaker = speaker or cfg["speakers"][0]
@@ -37,6 +38,10 @@ def interactive_loop(tts_instance, speaker: str = "xenia") -> None:
 
             if cmd == "speakers":
                 _print_speakers(tts_instance.current_lang)
+                continue
+
+            if cmd == "test":
+                _run_tests_interactive()
                 continue
 
             if cmd.startswith("vol "):
@@ -92,6 +97,7 @@ def _print_help() -> None:
         "  lang <key>   — сменить язык (ru, en)\n"
         "  vol <0.1-2.0> — громкость (по умолч. 0.8)\n"
         "  speed <0.5-2.0> — скорость (по умолч. 1.0)\n"
+        "  test         — запустить тесты\n"
         "  <имя_голоса> — сменить голос"
     )
 
@@ -136,3 +142,41 @@ def _handle_language(tts_instance, cmd: str) -> None:
         tts_instance.switch_language(cmd.split(" ", 1)[1].strip())
     except ValueError as ve:
         logger.error(str(ve))
+
+
+def _run_tests_interactive() -> None:
+    """Выполняет тесты в интерактивном режиме."""
+    logger.info("🧪 Запуск тестов качества и производительности...")
+    try:
+        import warnings
+        warnings.filterwarnings("ignore", category=SyntaxWarning)
+        warnings.filterwarnings("ignore", category=DeprecationWarning)
+        
+        exit_code = run_tests_cli()
+        if exit_code == 0:
+            logger.info("✅ Тесты пройдены успешно!")
+        else:
+            logger.warning(f"⚠️  Некоторые тесты не прошли (код: {exit_code})")
+    except Exception as e:
+        logger.error(f"❌ Ошибка при запуске тестов: {e}")
+
+
+def run_tests_cli() -> int:
+    """Выполняет тесты pytest из установленного окружения."""
+    try:
+        import pytest
+    except ImportError as exc:
+        logger.error("pytest не установлен. Установите dev-зависимости: pip install -e .[dev]")
+        raise RuntimeError("pytest is required to run tests.") from exc
+
+    # Вычисляем абсолютный путь к директории tests
+    # Пакет находится в src/silero_tts/, проект на уровень выше
+    package_dir = Path(__file__).parent.parent.parent  # -> src/.. = project_root
+    tests_dir = package_dir / "tests"
+    
+    if not tests_dir.exists():
+        logger.error(f"❌ Директория тестов не найдена: {tests_dir}")
+        return 1
+    
+    logger.info(f"📂 Используется директория тестов: {tests_dir}")
+    return pytest.main(["-q", str(tests_dir)])
