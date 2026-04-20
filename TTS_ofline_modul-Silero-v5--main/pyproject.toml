@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "silero-offline-tts"
+version = "1.0.0"
+description = "Офлайн-синтез речи на базе Silero TTS (RU V5 + EN V3)"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "torch>=2.0.0",
+    "torchaudio>=2.0.0",
+    "soundfile>=0.12.1",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "loguru>=0.7.2",
+    "omegaconf>=2.3.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "black>=23.0", "mypy>=1.0"]
+
+[project.scripts]
+silero-tts = "silero_tts.__main__:main"
+
+[tool.pytest.ini_options]
+markers = [
+    "performance: latency and benchmark tests",
+    "longrun: extended stability and load tests",
+]
+filterwarnings = [
+    "ignore::SyntaxWarning",
+    "ignore::DeprecationWarning",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
