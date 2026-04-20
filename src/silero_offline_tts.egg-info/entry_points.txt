@@ -1,0 +1,2 @@
+[console_scripts]
+silero-tts = silero_tts.__main__:main
